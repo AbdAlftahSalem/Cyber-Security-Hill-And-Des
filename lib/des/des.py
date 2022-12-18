@@ -1,6 +1,6 @@
 import datetime
 
-from const import const
+from lib.const import const
 
 
 def converterToListOfBit(inputText):

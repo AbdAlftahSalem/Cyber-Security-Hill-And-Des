@@ -1,7 +1,7 @@
 import datetime
 
-from const import const
-from hill_cipher import ExtensionMethods
+from lib.const import const
+from lib.hill_cipher import ExtensionMethods
 
 
 class HillCipher:

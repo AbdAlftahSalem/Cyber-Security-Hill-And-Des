@@ -2,9 +2,9 @@ import datetime
 
 from flask import Flask, request
 
-from const import const
-from des.des import Des
-from hill_cipher import HillCipher as hc
+from lib.const import const
+from lib.des.des import Des
+from lib.hill_cipher import HillCipher as hc
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
