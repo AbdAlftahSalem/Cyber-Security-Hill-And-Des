@@ -1,7 +1,3 @@
-import lib.des.des as desImport
-from lib.hill_cipher import HillCipher as hc
-import lib.const.const as const
-
 # app = Flask(__name__)
 # app.config['JSON_AS_ASCII'] = False
 #
@@ -51,14 +47,87 @@ import lib.const.const as const
 #         return {"status": False, "message": "The request failed", "datetime": datetime.datetime.now()}
 
 
-if __name__ == '__main__':
-    plainText = "ABDALFTA"
-    x = desImport.des(const.KEY_DES)
-    c = x.encrypt(plainText)
-    print(c)
-    e = x.decrypt(c)
-    print(e)
+# if __name__ == '__main__':
+#     plainText = "ABDALFTA"
+#     desObj = desImport.des(const.KEY_DES)
+#     cipherText = desObj.encrypt(plainText)
+#     plainRes = desObj.decrypt(cipherText)
+#     print(cipherText)
+#     print(plainRes)
+#
+#     print("\n\n*****************************\n\n")
+import flet as ft
 
-    print(x.encrypt(e))
+from lib.hill_cipher.HillCipher import HillCipher as hc
 
-    print("\n\n*****************************\n\n")
+
+def main(page: ft.Page):
+    page.title = "Flet counter example"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    algoNameUsed = "Hill"
+
+    def palinTextOnChange(e):
+        plainText.value = plainText.value
+        cipherText.value = ""
+
+        if t.value == "Hill":
+            hillAlgo(plainText.value, "enc")
+        else:
+            desAlgo(plainText.value, "enc")
+
+        page.update()
+
+    def cipherTextOnChange(e):
+        plainText.value = ""
+        if t.value == "Hill":
+            hillAlgo(cipherText.value, "dec")
+
+        page.update()
+
+    def changeAlgo(e):
+        plainText.value = ""
+        cipherText.value = ""
+        if t.value == "Hill":
+            t.value = "Dess"
+        else:
+            t.value = "Hill"
+        page.update()
+
+    def hillAlgo(inputText, typeAlgo):
+        if typeAlgo == "enc":
+            cipherText.value = hc.encryption(inputText)["ciphertext"]
+        else:
+            plainText.value = hc.decryption(inputText.upper())["plaintext"]
+
+        page.update()
+
+    def desAlgo(inputText, typeAlgo):
+        if typeAlgo == "enc":
+            cipherText.value = hc.encryption(inputText)["ciphertext"]
+        else:
+            plainText.value = hc.decryption(inputText)["plaintext"]
+
+        page.update()
+
+    plainText = ft.TextField(value="", hint_text="Plain Text", text_align=ft.TextAlign.LEFT, width=700,
+                             on_change=palinTextOnChange)
+    cipherText = ft.TextField(value="", hint_text="Cipher Text", text_align=ft.TextAlign.LEFT, width=700,
+                              on_change=cipherTextOnChange)
+    t = ft.Text(value=algoNameUsed, color="white")
+
+    algoName = ft.TextButton(text="Change Algo", on_click=changeAlgo)
+
+    page.add(
+        ft.Column(
+            [
+                t,
+                plainText,
+                cipherText,
+                algoName,
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+    )
+
+
+ft.app(target=main)

@@ -1,117 +1,3 @@
-# import datetime
-#
-# from lib.const import const
-#
-#
-# def converterToListOfBit(inputText):
-#     array = []
-#     for i in inputText:
-#         binaryValue = binValue(i, 8)
-#         array.extend([int(j) for j in list(binaryValue)])
-#     return array
-#
-#
-# def converterToString(inputArray):
-#     response = ''.join(
-#         [chr(int(y, 2)) for y in [''.join([str(x) for x in _bytes]) for _bytes in spiltList(inputArray, 8)]])
-#     return response
-#
-#
-# def binValue(value, bitSize):
-#     binVal = bin(value)[2:] if isinstance(value, int) else bin(ord(value))[2:]
-#     if len(binVal) > bitSize:
-#         print("binary value larger than the expected size")
-#     while len(binVal) < bitSize:
-#         binVal = "0" + binVal
-#     return binVal
-#
-#
-# def spiltList(inputList, numberSize):
-#     return [inputList[k:k + numberSize] for k in range(0, len(inputList), numberSize)]
-#
-#
-# ENCRYPT = 1
-# DECRYPT = 0
-#
-#
-# class Des:
-#
-#     def __init__(self):
-#         self.keys = None
-#
-#     def run(self, key, text, status, action=ENCRYPT):
-#         if len(text) % 8 != 0:
-#             return {"message": "Data size should be multiple of 8", "plainText": "", "cipherText": "", "status": False}
-#
-#         self.generateKeys()
-#         text_blocks = spiltList(text, 8)
-#         result = list()
-#         for block in text_blocks:
-#             block = converterToListOfBit(block)
-#             block = self.permitMethod(block, const.PI)
-#             firstList, secList = spiltList(block, 32)
-#             for i in range(16):
-#                 expandTxtResult = self.expandPalinText(secList, const.E)
-#                 if action == ENCRYPT:
-#                     xorResult = self.xorMethod(self.keys[i], expandTxtResult)
-#                 else:
-#                     xorResult = self.xorMethod(self.keys[15 - i], expandTxtResult)
-#                 xorResult = self.substitute(xorResult)
-#                 xorResult = self.permitMethod(xorResult, const.P)
-#                 xorResult = self.xorMethod(firstList, xorResult)
-#                 firstList = secList
-#                 secList = xorResult
-#             result += self.permitMethod(secList + firstList, const.PI_1)
-#         final_res = converterToString(result)
-#
-#         if status == 0:
-#             return {"plainText": text, "cipherText": final_res, "key": key, "data": datetime.datetime.now(),
-#                     "algo": "des", "status": True}
-#         else:
-#             return {"plainText": final_res, "cipherText": text, "key": key, "data": datetime.datetime.now(),
-#                     "algo": "des", "status": True}
-#
-#     def substitute(self, inputTxt):
-#         subBlocks = spiltList(inputTxt, 6)
-#         result = []
-#         for i in range(len(subBlocks)):
-#             block = subBlocks[i]
-#             row = int(str(block[0]) + str(block[5]), 2)
-#             column = int(''.join([str(x) for x in block[1:][:-1]]), 2)
-#             S_BOXValue = const.S_BOX[i][row][column]
-#             binaryValue = binValue(S_BOXValue, 4)
-#             result += [int(binV) for binV in binaryValue]
-#         return result
-#
-#     def permitMethod(self, block, table):
-#         return [block[x - 1] for x in table]
-#
-#     def expandPalinText(self, block, table):
-#         return [block[x - 1] for x in table]
-#
-#     def xorMethod(self, firstText, secText):
-#         return [x ^ y for x, y in zip(firstText, secText)]
-#
-#     def generateKeys(self):
-#         self.keys = []
-#         key = converterToListOfBit(const.KEY_DES)
-#         key = self.permitMethod(key, const.CP_1)
-#         firstList, secList = spiltList(key, 28)
-#         for i in range(16):
-#             firstList, secList = self.shift(firstList, secList, const.SHIFT[i])
-#             tmp = firstList + secList
-#             self.keys.append(self.permitMethod(tmp, const.CP_2))
-#
-#     def shift(self, g, d, n):
-#         return g[n:] + g[:n], d[n:] + d[:n]
-#
-#     def encrypt(self, key, text, status):
-#         return self.run(key, text, status, ENCRYPT)
-#
-#     def decrypt(self, key, text, status):
-#         return self.run(key, text, status, DECRYPT)
-
-
 import sys
 
 from Scripts.bottle import unicode
@@ -142,38 +28,30 @@ class _baseDes(object):
         self._padmode = padmode
 
     def getKey(self):
-        """getKey() -> bytes"""
         return self.__key
 
     def setKey(self, key):
-        """Will set the crypting key for this object."""
         key = self._guardAgainstUnicode(key)
         self.__key = key
 
     def getMode(self):
-        """getMode() -> pyDes.ECB or pyDes.CBC"""
         return self._mode
 
     def setMode(self, mode):
-        """Sets the type of crypting mode, pyDes.ECB or pyDes.CBC"""
         self._mode = mode
 
     def getPadding(self):
-        """getPadding() -> bytes of length 1. Padding character."""
         return self._padding
 
     def setPadding(self, pad):
-        """setPadding() -> bytes of length 1. Padding character."""
         if pad is not None:
             pad = self._guardAgainstUnicode(pad)
         self._padding = pad
 
     def getPadMode(self):
-        """getPadMode() -> pyDes.PAD_NORMAL or pyDes.PAD_PKCS5"""
         return self._padmode
 
     def setPadMode(self, mode):
-        """Sets the type of padding mode, pyDes.PAD_NORMAL or pyDes.PAD_PKCS5"""
         self._padmode = mode
 
     def getIV(self):
@@ -181,7 +59,6 @@ class _baseDes(object):
         return self._iv
 
     def setIV(self, IV):
-        """Will set the Initial Value, used in conjunction with CBC mode"""
         if not IV or len(IV) != self.block_size:
             raise ValueError("Invalid Initial Value (IV), must be a multiple of " + str(self.block_size) + " bytes")
         IV = self._guardAgainstUnicode(IV)
@@ -237,6 +114,8 @@ class _baseDes(object):
                 pad_len = data[-1]
             data = data[:-pad_len]
 
+        print("Befor")
+        print(data)
         return data
 
     def _guardAgainstUnicode(self, data):
@@ -405,7 +284,6 @@ class des(_baseDes):
         return result
 
     def bitToList(self, data):
-        """Turn the list of bits -> data, into a string"""
         result = []
         pos = 0
         c = 0
@@ -422,7 +300,6 @@ class des(_baseDes):
             return bytes(result)
 
     def permutateMethod(self, table, block):
-        """Permutate this block with the specified table"""
         return list(map(lambda x: block[x], table))
 
     def subKeyMethod(self):
@@ -499,7 +376,6 @@ class des(_baseDes):
         return self.final
 
     def crypt(self, data, crypt_type):
-        """Crypt the data in blocks, running it through des_crypt()"""
 
         if not data:
             return ''
@@ -550,18 +426,6 @@ class des(_baseDes):
             return bytes.fromhex('').join(result)
 
     def encrypt(self, data, pad=None, padmode=None):
-        """encrypt(data, [pad], [padmode]) -> bytes
-
-        data : Bytes to be encrypted
-        pad  : Optional argument for encryption padding. Must only be one byte
-        padmode : Optional argument for overriding the padding mode.
-
-        The data must be a multiple of 8 bytes and will be encrypted
-        with the already specified key. Data does not have to be a
-        multiple of 8 bytes if the padding character is supplied, or
-        the padmode is set to PAD_PKCS5, as bytes will then added to
-        ensure the be padded data is a multiple of 8 bytes.
-        """
         data = self._guardAgainstUnicode(data)
         if pad is not None:
             pad = self._guardAgainstUnicode(pad)
@@ -569,20 +433,6 @@ class des(_baseDes):
         return self.crypt(data, des.ENCRYPT)
 
     def decrypt(self, data, pad=None, padmode=None):
-        """decrypt(data, [pad], [padmode]) -> bytes
-
-        data : Bytes to be decrypted
-        pad  : Optional argument for decryption padding. Must only be one byte
-        padmode : Optional argument for overriding the padding mode.
-
-        The data must be a multiple of 8 bytes and will be decrypted
-        with the already specified key. In PAD_NORMAL mode, if the
-        optional padding character is supplied, then the un-encrypted
-        data will have the padding characters removed from the end of
-        the bytes. This pad removal only occurs on the last 8 bytes of
-        the data (last data block). In PAD_PKCS5 mode, the special
-        padding end markers will be removed from the data after decrypting.
-        """
         data = self._guardAgainstUnicode(data)
         if pad is not None:
             pad = self._guardAgainstUnicode(pad)
