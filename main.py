@@ -1,3 +1,11 @@
+import flet as ft
+
+import lib.des.des as des
+from lib.const import const
+# from lib.des.des import des
+from lib.hill_cipher.HillCipher import HillCipher as hc
+
+
 # app = Flask(__name__)
 # app.config['JSON_AS_ASCII'] = False
 #
@@ -45,20 +53,14 @@
 #         return cipherText
 #     except:
 #         return {"status": False, "message": "The request failed", "datetime": datetime.datetime.now()}
-
-
 # if __name__ == '__main__':
-#     plainText = "ABDALFTA"
-#     desObj = desImport.des(const.KEY_DES)
-#     cipherText = desObj.encrypt(plainText)
-#     plainRes = desObj.decrypt(cipherText)
-#     print(cipherText)
-#     print(plainRes)
+# plainText = "ABDALFTA"
+# cipherText = desObj.encrypt(plainText)
+# plainRes = desObj.decrypt(cipherText)
+# print(cipherText)
+# print(plainRes)
 #
 #     print("\n\n*****************************\n\n")
-import flet as ft
-
-from lib.hill_cipher.HillCipher import HillCipher as hc
 
 
 def main(page: ft.Page):
@@ -88,7 +90,7 @@ def main(page: ft.Page):
         plainText.value = ""
         cipherText.value = ""
         if t.value == "Hill":
-            t.value = "Dess"
+            t.value = "Dess [ Text should be multiple of 8 ]"
         else:
             t.value = "Hill"
         page.update()
@@ -102,11 +104,16 @@ def main(page: ft.Page):
         page.update()
 
     def desAlgo(inputText, typeAlgo):
-        if typeAlgo == "enc":
-            cipherText.value = hc.encryption(inputText)["ciphertext"]
-        else:
-            plainText.value = hc.decryption(inputText)["plaintext"]
 
+        if len(inputText) % 8 == 0:
+            x = des.des(const.KEY_DES)
+
+            if typeAlgo == "enc":
+                cipherText.value = x.encrypt("ADBODADD")
+                print(cipherText.value)
+            else:
+                plainText.value = x.encrypt(inputText)
+                print(plainText.value)
         page.update()
 
     plainText = ft.TextField(value="", hint_text="Plain Text", text_align=ft.TextAlign.LEFT, width=700,
@@ -115,7 +122,7 @@ def main(page: ft.Page):
                               on_change=cipherTextOnChange)
     t = ft.Text(value=algoNameUsed, color="white")
 
-    algoName = ft.TextButton(text="Change Algo", on_click=changeAlgo)
+    algoName = ft.TextButton(text="Change Algorithm", on_click=changeAlgo)
 
     page.add(
         ft.Column(
