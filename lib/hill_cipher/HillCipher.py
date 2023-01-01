@@ -10,7 +10,6 @@ class HillCipher:
     def encryption(plaintext):
         alphabet, reverse_alphabet = ExtensionMethods.ExtensionMethods.getAlphabet()
         key = ExtensionMethods.ExtensionMethods.getText(const.KEY_HILL, alphabet)
-
         if ExtensionMethods.ExtensionMethods.isSquareMatrix(key):
             key = ExtensionMethods.ExtensionMethods.getKeyMatrix(key, alphabet)
             plainText = ExtensionMethods.ExtensionMethods.getTextMatrix(plaintext.upper(), key.shape[0], alphabet)

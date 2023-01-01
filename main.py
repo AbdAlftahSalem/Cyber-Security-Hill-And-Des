@@ -64,7 +64,7 @@ from lib.hill_cipher.HillCipher import HillCipher as hc
 
 
 def main(page: ft.Page):
-    page.title = "Flet counter example"
+    page.title = "Algorithm project"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     algoNameUsed = "Hill"
 
